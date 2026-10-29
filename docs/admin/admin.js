@@ -202,9 +202,12 @@
 
   // One commit: the new content, any newly uploaded files it uses, and the
   // removal of uploads nothing points to any more.
+  // Requests run side by side where they can; each GitHub call takes about half
+  // a second, so the order matters for how long a save feels.
   async function commitContent(message) {
-    const ref = await ghApi(`/git/ref/heads/${encodeURIComponent(gh.branch)}`);
-    const head = await ghApi(`/git/commits/${ref.object.sha}`);
+    const [outdated, latest] = await Promise.all([isOutdated(), ghApi(`/commits/${encodeURIComponent(gh.branch)}`)]);
+    if (outdated) return 'outdated';
+    const head = { sha: latest.sha, tree: { sha: latest.commit.tree.sha } };
     const existing = await treeOf(head.tree.sha);
     let merged = false;
     const remoteSha = existing.get(CONTENT_PATH);
@@ -422,7 +425,7 @@
   // save over newer work. Before saving, compare with the published version;
   // if this page is outdated, carry the unsaved edits over and reload.
 
-  const APP_VERSION = '2026-10-29.4';
+  const APP_VERSION = '2026-10-29.5';
   const DRAFT_KEY = 'portfolio-draft';
 
   async function isOutdated() {
@@ -502,16 +505,12 @@
     $('#save').disabled = true;
     $('#save').textContent = 'جارٍ الحفظ…';
     try {
-      if (await isOutdated()) return reloadWithDraft();
       const merged = await commitContent('تحديث المحتوى من لوحة التحكم');
+      if (merged === 'outdated') return reloadWithDraft();
       setDirty(false);
       if (merged) render();
-      toast(
-        merged
-          ? 'تم الحفظ، ودُمجت تعديلاتك مع تغييرات أحدث حُفظت من مكان آخر. يظهر التحديث خلال دقيقة تقريبًا.'
-          : 'تم الحفظ. يظهر التحديث على الموقع خلال دقيقة تقريبًا.',
-        'ok'
-      );
+      toast(merged ? 'تم الحفظ، ودُمجت تعديلاتك مع تغييرات أحدث حُفظت من مكان آخر.' : 'تم الحفظ.', 'ok');
+      watchPublish(base);
     } catch (err) {
       setDirty(true);
       toast(err.message, 'err');
@@ -519,6 +518,35 @@
       saving = false;
     }
   }
+  // GitHub Pages republishes the site in roughly half a minute after a save.
+  // Watch the public content until it matches what was saved.
+  let watchId = 0;
+  async function watchPublish(saved) {
+    const id = ++watchId;
+    const badge = $('#publishState');
+    badge.hidden = false;
+    badge.className = 'publish busy';
+    badge.textContent = 'جارٍ النشر على الموقع…';
+    const started = Date.now();
+    while (id === watchId && Date.now() - started < 3 * 60 * 1000) {
+      await new Promise((r) => setTimeout(r, 5000));
+      try {
+        const live = await (await fetch(`../content.json?v=${Date.now()}`, { cache: 'no-store' })).json();
+        if (JSON.stringify(live) === saved) {
+          if (id !== watchId) return;
+          badge.className = 'publish done';
+          badge.textContent = 'ظهر التحديث على الموقع';
+          setTimeout(() => id === watchId && (badge.hidden = true), 8000);
+          return;
+        }
+      } catch {}
+    }
+    if (id === watchId) {
+      badge.className = 'publish';
+      badge.textContent = 'النشر يأخذ وقتًا أطول من المعتاد، وسيظهر قريبًا';
+    }
+  }
+
   $('#save').addEventListener('click', save);
   addEventListener('keydown', (e) => {
     if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 's') {
