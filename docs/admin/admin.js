@@ -402,13 +402,53 @@
     content = loaded.data;
     base = JSON.stringify(loaded.data);
     baseSha = loaded.sha;
+    const draft = takeDraft();
+    if (draft) {
+      ({ content, base, baseSha } = draft);
+      for (const [path, sha] of draft.pending) pending.set(path, sha);
+    }
     normalize(content);
     $('#auth').hidden = true;
     $('#app').hidden = false;
     $('#repoName').textContent = `${gh.owner}/${gh.repo}`;
-    setDirty(false);
+    setDirty(!!draft);
     renderTabs();
     render();
+    if (draft) toast('حُدّثت لوحة التحكم إلى أحدث إصدار، وتعديلاتك ما زالت موجودة. اضغط «حفظ التغييرات».', 'ok');
+  }
+
+  // ---------- staying current ----------
+  // An old copy of this page (left open, or cached by the browser) must never
+  // save over newer work. Before saving, compare with the published version;
+  // if this page is outdated, carry the unsaved edits over and reload.
+
+  const APP_VERSION = '2026-10-29.4';
+  const DRAFT_KEY = 'portfolio-draft';
+
+  async function isOutdated() {
+    try {
+      const res = await fetch(`version.json?v=${Date.now()}`, { cache: 'no-store' });
+      return res.ok && (await res.json()).v !== APP_VERSION;
+    } catch {
+      return false;
+    }
+  }
+
+  function reloadWithDraft() {
+    try {
+      sessionStorage.setItem(DRAFT_KEY, JSON.stringify({ content, base, baseSha, pending: [...pending] }));
+    } catch {}
+    location.replace(`${location.pathname}?r=${Date.now()}`);
+  }
+
+  function takeDraft() {
+    try {
+      const draft = JSON.parse(sessionStorage.getItem(DRAFT_KEY));
+      sessionStorage.removeItem(DRAFT_KEY);
+      return draft;
+    } catch {
+      return null;
+    }
   }
 
   function normalize(c) {
@@ -462,6 +502,7 @@
     $('#save').disabled = true;
     $('#save').textContent = 'جارٍ الحفظ…';
     try {
+      if (await isOutdated()) return reloadWithDraft();
       const merged = await commitContent('تحديث المحتوى من لوحة التحكم');
       setDirty(false);
       if (merged) render();

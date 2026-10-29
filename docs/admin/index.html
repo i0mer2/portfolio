@@ -76,6 +76,9 @@
 
   <script src="../js/icons.js"></script>
   <script src="../js/video-links.js"></script>
-  <script src="admin.js"></script>
+  <script>
+    // Always load the latest dashboard code; GitHub Pages caches files for 10 minutes.
+    document.write('<script src="admin.js?v=' + Date.now() + '"><\/script>');
+  </script>
 </body>
 </html>
