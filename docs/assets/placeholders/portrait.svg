@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 800">
+  <defs><radialGradient id="b" cx=".5" cy=".35" r=".8"><stop offset="0" stop-color="#7c3aed"/><stop offset="1" stop-color="#1e1036"/></radialGradient></defs>
+  <rect width="600" height="800" fill="url(#b)"/>
+  <circle cx="300" cy="310" r="120" fill="#ddd6fe" opacity=".9"/>
+  <path d="M90 800c0-170 95-280 210-280s210 110 210 280z" fill="#ddd6fe" opacity=".9"/>
+  <text x="300" y="760" text-anchor="middle" font-family="'Segoe UI','Tahoma',sans-serif" font-size="30" fill="#4c1d95" font-weight="700">صورتك الشخصية</text>
+</svg>

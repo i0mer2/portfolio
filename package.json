@@ -1,0 +1,12 @@
+{
+  "name": "portfolio",
+  "version": "2.0.0",
+  "private": true,
+  "description": "موقع معرض أعمال ثابت يُنشر على GitHub Pages، مع لوحة تحكم تحفظ في GitHub",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

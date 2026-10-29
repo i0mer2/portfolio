@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800">
+  <rect width="1200" height="800" fill="#f0fdf4"/>
+  <rect x="0" y="0" width="600" height="800" fill="#16a34a"/>
+  <circle cx="300" cy="300" r="170" fill="#fff" opacity=".18"/>
+  <text x="520" y="620" text-anchor="end" font-family="'Segoe UI','Tahoma',sans-serif" font-size="64" font-weight="800" fill="#fff">ملف تعريفي</text>
+  <text x="520" y="690" text-anchor="end" font-family="'Segoe UI','Tahoma',sans-serif" font-size="30" fill="#fff" opacity=".85">مطبوعات · ٤</text>
+  <rect x="660" y="90" width="480" height="300" rx="18" fill="#16a34a" opacity=".25"/>
+  <text x="1120" y="440" text-anchor="end" font-family="'Segoe UI','Tahoma',sans-serif" font-size="38" font-weight="800" fill="#0f172a">عن الشركة</text>
+  <rect x="720" y="470" width="400" height="12" rx="6" fill="#94a3b8" opacity=".55"/><rect x="720" y="504" width="400" height="12" rx="6" fill="#94a3b8" opacity=".55"/><rect x="720" y="538" width="300" height="12" rx="6" fill="#94a3b8" opacity=".55"/><rect x="720" y="572" width="400" height="12" rx="6" fill="#94a3b8" opacity=".55"/><rect x="720" y="606" width="400" height="12" rx="6" fill="#94a3b8" opacity=".55"/><rect x="720" y="640" width="300" height="12" rx="6" fill="#94a3b8" opacity=".55"/>
+  <rect x="596" y="0" width="8" height="800" fill="#000" opacity=".12"/>
+</svg>

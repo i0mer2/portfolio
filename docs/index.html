@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>معرض الأعمال</title>
+  <meta name="theme-color" content="#0f0a1e">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/site.css">
+</head>
+<body class="is-loading">
+  <div class="bg" aria-hidden="true">
+    <div class="bg-glow g1"></div>
+    <div class="bg-glow g2"></div>
+    <div class="bg-rings r1"></div>
+    <div class="bg-rings r2"></div>
+    <div class="bg-rings r3"></div>
+    <div class="bg-grain"></div>
+  </div>
+
+  <header class="topbar">
+    <a class="brand" href="#home">
+      <img class="brand-img" alt="">
+      <span class="brand-name"></span>
+    </a>
+    <nav class="nav" aria-label="القائمة">
+      <span class="nav-pill" aria-hidden="true"></span>
+    </nav>
+    <button class="menu-btn" type="button" aria-label="القائمة" aria-expanded="false"></button>
+  </header>
+
+  <div class="drawer" hidden>
+    <nav class="drawer-nav"></nav>
+    <div class="drawer-social"></div>
+  </div>
+
+  <main>
+    <section class="hero" id="home" data-nav="الرئيسية">
+      <h1 class="hero-title">
+        <span class="hero-l1"></span>
+        <span class="hero-l2"><span class="hero-l2-text"></span><i>.</i></span>
+      </h1>
+      <div class="hero-avatar">
+        <div class="hero-halo"></div>
+        <img alt="">
+      </div>
+      <div class="hero-meta">
+        <strong class="hero-name"></strong>
+        <span class="hero-role"></span>
+      </div>
+      <a class="btn-glow hero-cta" href="#works"></a>
+    </section>
+
+    <div id="works"></div>
+
+    <section class="about" id="about" data-nav="من أنا">
+      <div class="about-text" data-reveal>
+        <span class="eyebrow"></span>
+        <h2 class="about-title"></h2>
+        <span class="about-rule"></span>
+        <div class="about-body"></div>
+      </div>
+      <div class="about-photo" data-reveal>
+        <img alt="">
+      </div>
+    </section>
+
+    <section class="clients" id="clients" data-nav="عملائي">
+      <header class="sec-head" data-reveal>
+        <h2></h2>
+        <p></p>
+      </header>
+      <div class="clients-grid"></div>
+    </section>
+
+    <section class="stats" id="stats" data-nav="إنجازاتي">
+      <header class="sec-head sec-head--center" data-reveal>
+        <h2></h2>
+      </header>
+      <div class="stats-row"></div>
+    </section>
+
+    <section class="cta" id="contact" data-nav="تواصل معي">
+      <div class="cta-card" data-reveal>
+        <h2></h2>
+        <p></p>
+        <a class="btn-glow cta-btn" target="_blank" rel="noopener"></a>
+        <div class="cta-social"></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-social"></div>
+    <p class="footer-copy"></p>
+  </footer>
+
+  <div class="lightbox" hidden>
+    <button class="lb-close" type="button" aria-label="إغلاق"></button>
+    <button class="lb-prev" type="button" aria-label="السابق"></button>
+    <figure>
+      <div class="lb-media"></div>
+      <figcaption></figcaption>
+    </figure>
+    <button class="lb-next" type="button" aria-label="التالي"></button>
+  </div>
+
+  <script src="js/icons.js"></script>
+  <script src="js/video-links.js"></script>
+  <script src="js/site.js"></script>
+</body>
+</html>

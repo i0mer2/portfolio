@@ -1,0 +1,4 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300">
+  <path d="M200 55l60 35v70l-60 35-60-35V90z" fill="none" stroke="#fff" stroke-width="14" stroke-linejoin="round"/>
+  <text x="200" y="250" text-anchor="middle" font-family="'Segoe UI','Tahoma',sans-serif" font-size="34" font-weight="700" fill="#fff">شعار ٦</text>
+</svg>

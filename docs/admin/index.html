@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>لوحة التحكم</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+  <div class="auth" id="auth" hidden>
+    <form class="auth-card" id="authForm">
+      <div class="auth-logo" id="authLogo"></div>
+      <h1>لوحة التحكم</h1>
+      <p class="muted">تُحفظ تعديلاتك مباشرة في مستودع الموقع على GitHub.</p>
+      <div class="auth-row">
+        <label>اسم المستخدم في GitHub<input type="text" id="ghOwner" class="ltr" autocomplete="username" required></label>
+        <label>اسم المستودع<input type="text" id="ghRepo" class="ltr" required></label>
+      </div>
+      <label>رمز الدخول (Token)<input type="password" id="ghToken" class="ltr" autocomplete="off" required></label>
+      <a class="auth-link" href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">إنشاء رمز دخول جديد على GitHub</a>
+      <details class="auth-more">
+        <summary>إعدادات إضافية</summary>
+        <label>الفرع (Branch)<input type="text" id="ghBranch" class="ltr" placeholder="main"></label>
+      </details>
+      <button class="btn btn-primary" type="submit" id="authBtn">ربط وتسجيل الدخول</button>
+      <p class="auth-error" id="authError"></p>
+    </form>
+  </div>
+
+  <div class="app" id="app" hidden>
+    <aside class="side">
+      <div class="side-brand">
+        <span class="auth-logo sm" id="sideLogo"></span>
+        <div>
+          <strong>لوحة التحكم</strong>
+          <small class="muted ltr" id="repoName"></small>
+        </div>
+      </div>
+      <nav class="side-nav" id="tabs"></nav>
+      <div class="side-foot">
+        <a class="btn btn-ghost" href="../" target="_blank" rel="noopener">عرض الموقع</a>
+        <button class="btn btn-ghost" id="logout" type="button">تسجيل الخروج</button>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="main-head">
+        <div>
+          <h1 id="tabTitle"></h1>
+          <p class="muted" id="tabHint"></p>
+        </div>
+        <button class="btn btn-primary" id="save" type="button" disabled>حفظ التغييرات</button>
+      </header>
+      <div class="panel-wrap" id="view"></div>
+    </main>
+  </div>
+
+  <div class="toasts" id="toasts"></div>
+  <input type="file" id="filePicker" accept="image/*" hidden>
+
+  <script src="../js/icons.js"></script>
+  <script src="../js/video-links.js"></script>
+  <script src="admin.js"></script>
+</body>
+</html>

@@ -1,0 +1,234 @@
+{
+  "site": {
+    "title": "معرض الأعمال",
+    "name": "اسمك هنا",
+    "role": "كاتب محتوى إعلاني",
+    "logo": "assets/placeholders/avatar.svg",
+    "accent": "#8b5cf6"
+  },
+  "hero": {
+    "line1": "كلماتٌ تصنع",
+    "line2": "الفـــرق",
+    "cta": "استعرض أعمالي",
+    "avatar": "assets/placeholders/avatar.svg"
+  },
+  "galleries": [
+    {
+      "id": "d1dan2",
+      "title": "أعمالي",
+      "subtitle": "فيديوهات من كتابتي",
+      "layout": "videos",
+      "items": [
+        {
+          "id": "d2bqqg",
+          "video": "assets/placeholders/video-1.mp4",
+          "link": "",
+          "poster": "",
+          "caption": "نموذج فيديو 1"
+        },
+        {
+          "id": "d319n5",
+          "video": "assets/placeholders/video-2.mp4",
+          "link": "",
+          "poster": "",
+          "caption": "نموذج فيديو 2"
+        },
+        {
+          "id": "d4q911",
+          "video": "assets/placeholders/video-3.mp4",
+          "link": "",
+          "poster": "",
+          "caption": "نموذج فيديو 3"
+        }
+      ]
+    },
+    {
+      "id": "d5b0lx",
+      "title": "نماذج من كتاباتي",
+      "subtitle": "نصوص إعلانية، ونصوص مرئية، وشعارات حملات",
+      "layout": "texts",
+      "items": [
+        {
+          "id": "d66hsf",
+          "tag": "إعلان على وسائل التواصل",
+          "headline": "قهوة الصباح بمعايير أعلى",
+          "excerpt": "ليست كل قهوة توقظك. يُحمَّص بُنّنا على مهل، لتكون الرشفة الأولى بداية يوم مختلف.",
+          "body": "ليست كل قهوة توقظك.\n\nيُحمَّص بُنّنا على مهل وبكميات محدودة، ويصلك طازجًا خلال ثمانٍ وأربعين ساعة من التحميص، لتكون الرشفة الأولى بداية يوم مختلف.\n\nاطلب الآن، واجعل الصباح أجمل أوقات يومك.",
+          "client": "مقهى محلي (مثال)",
+          "result": "زيادة الطلبات الإلكترونية 38%"
+        },
+        {
+          "id": "d77eqr",
+          "tag": "حملة بريد إلكتروني",
+          "headline": "عرض ينتهي خلال أربع وعشرين ساعة",
+          "excerpt": "خصم 30% على جميع المنتجات ليوم واحد فقط. الكميات محدودة، والوقت يمضي.",
+          "body": "خصم 30% على جميع المنتجات ليوم واحد فقط.\n\nالكميات محدودة، والوقت يمضي.\n\nالمنتجات التي أضفتها إلى سلتك سابقًا متاحة الآن بسعر أقل، فلا تفوّت الفرصة.",
+          "client": "متجر إلكتروني (مثال)",
+          "result": "نفاد الكمية خلال 48 ساعة"
+        },
+        {
+          "id": "d81jou",
+          "tag": "نص فيديو",
+          "headline": "منزلك يستحق الراحة كما تستحقها",
+          "excerpt": "بعد يوم طويل، تستحق مكانًا يمنحك الراحة. جلسة واحدة تكفي لتدرك الفرق.",
+          "body": "المشهد الأول: رجل يعود إلى منزله متأخرًا، ويضع حقيبته جانبًا.\nالتعليق الصوتي: بعد يوم طويل…\n\nالمشهد الثاني: يجلس على أريكة قديمة متعبة.\nالتعليق الصوتي: …تستحق مكانًا يمنحك الراحة.\n\nالمشهد الثالث: الرجل نفسه على الأريكة الجديدة، وقد ارتسمت على وجهه ابتسامة.\nالتعليق الصوتي: جلسة واحدة تكفي لتدرك الفرق.",
+          "client": "شركة أثاث (مثال)",
+          "result": "1.2 مليون مشاهدة"
+        },
+        {
+          "id": "d9j14w",
+          "tag": "شعار حملة",
+          "headline": "لا نبيعك تأمينًا، بل نمنحك راحة البال",
+          "excerpt": "شعار حملة لشركة تأمين، يركّز على الأثر الشعوري بدلًا من المنتج.",
+          "body": "لا نبيعك تأمينًا، بل نمنحك راحة البال.\n\nفكرة الحملة: لا يشتري العميل وثيقة تأمين، بل يشتري الطمأنينة. لذلك بُنيت جميع الإعلانات حول لحظة نوم هادئ بعد يوم طويل.",
+          "client": "شركة تأمين (مثال)",
+          "result": ""
+        }
+      ]
+    },
+    {
+      "id": "daebji",
+      "title": "الحملات",
+      "subtitle": "تصاميم من كتابة محتواها",
+      "layout": "slider",
+      "items": [
+        {
+          "id": "dbrnfx",
+          "image": "assets/placeholders/post-1.svg",
+          "caption": ""
+        },
+        {
+          "id": "dctl40",
+          "image": "assets/placeholders/post-2.svg",
+          "caption": ""
+        },
+        {
+          "id": "dd1fvx",
+          "image": "assets/placeholders/post-3.svg",
+          "caption": ""
+        },
+        {
+          "id": "deop4s",
+          "image": "assets/placeholders/post-4.svg",
+          "caption": ""
+        },
+        {
+          "id": "dfn1la",
+          "image": "assets/placeholders/post-5.svg",
+          "caption": ""
+        },
+        {
+          "id": "dgn6yy",
+          "image": "assets/placeholders/post-6.svg",
+          "caption": ""
+        }
+      ]
+    }
+  ],
+  "about": {
+    "label": "نبذة",
+    "title": "",
+    "photo": "assets/placeholders/portrait.svg",
+    "text": "كاتب محتوى إعلاني، أعمل على تحويل أفكار المشاريع إلى كلمات مؤثرة ومقنعة. أكتب النصوص الإعلانية، ونصوص الفيديو، وشعارات الحملات، وأرافق العلامات التجارية من مرحلة الفكرة حتى الصيغة النهائية.\n\nأؤمن بأن الكلمة المناسبة في موضعها الصحيح تصنع الفارق. لا أكتب ليبدو الكلام جميلًا فحسب، بل لتصل رسالتك بوضوح، ويتفاعل معها جمهورك."
+  },
+  "clients": {
+    "title": "عملائي",
+    "subtitle": "جهات وثقت بعملي",
+    "items": [
+      {
+        "id": "dhz78l",
+        "name": "عميل 1",
+        "logo": "assets/placeholders/logo-1.svg"
+      },
+      {
+        "id": "di9i0r",
+        "name": "عميل 2",
+        "logo": "assets/placeholders/logo-2.svg"
+      },
+      {
+        "id": "djgnaq",
+        "name": "عميل 3",
+        "logo": "assets/placeholders/logo-3.svg"
+      },
+      {
+        "id": "dk3352",
+        "name": "عميل 4",
+        "logo": "assets/placeholders/logo-4.svg"
+      },
+      {
+        "id": "dlfbbi",
+        "name": "عميل 5",
+        "logo": "assets/placeholders/logo-5.svg"
+      },
+      {
+        "id": "dmbpi0",
+        "name": "عميل 6",
+        "logo": "assets/placeholders/logo-6.svg"
+      },
+      {
+        "id": "dnbrg3",
+        "name": "عميل 7",
+        "logo": "assets/placeholders/logo-7.svg"
+      },
+      {
+        "id": "doqj0u",
+        "name": "عميل 8",
+        "logo": "assets/placeholders/logo-8.svg"
+      },
+      {
+        "id": "dpzf6y",
+        "name": "عميل 9",
+        "logo": "assets/placeholders/logo-9.svg"
+      },
+      {
+        "id": "dqsb4g",
+        "name": "عميل 10",
+        "logo": "assets/placeholders/logo-10.svg"
+      }
+    ]
+  },
+  "stats": {
+    "title": "إنجازاتي",
+    "items": [
+      {
+        "id": "dry7cf",
+        "icon": "pen",
+        "prefix": "+",
+        "value": 500,
+        "label": "نص إعلاني"
+      },
+      {
+        "id": "dscbe4",
+        "icon": "play",
+        "prefix": "+",
+        "value": 120,
+        "label": "فيديو"
+      },
+      {
+        "id": "dtl5ok",
+        "icon": "users",
+        "prefix": "+",
+        "value": 80,
+        "label": "عميل"
+      },
+      {
+        "id": "duf6if",
+        "icon": "award",
+        "prefix": "+",
+        "value": 5,
+        "label": "سنوات من الخبرة"
+      }
+    ]
+  },
+  "contact": {
+    "instagram": "@username",
+    "instagramUrl": "https://instagram.com/",
+    "whatsapp": "",
+    "email": "",
+    "behance": "",
+    "footer": "جميع الحقوق محفوظة",
+    "ctaTitle": "هل لديك مشروع يحتاج إلى محتوى مؤثر؟",
+    "ctaText": "يسعدني التعاون معك لتحويل فكرتك إلى محتوى واضح ومقنع. تواصل معي لنبدأ.",
+    "ctaButton": "تواصل معي"
+  }
+}
