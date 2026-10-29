@@ -150,9 +150,41 @@
       reader.readAsDataURL(file);
     });
 
-  async function loadContent(ref) {
+  async function fetchContent(ref) {
     const file = await ghApi(`/contents/${CONTENT_PATH}?ref=${encodeURIComponent(ref)}`);
-    return JSON.parse(fromBase64(file.content));
+    return { data: JSON.parse(fromBase64(file.content)), sha: file.sha };
+  }
+  const loadContent = async (ref) => (await fetchContent(ref)).data;
+
+  // The saved content this page started from, so a save can tell whether
+  // someone else (another device or tab) saved in the meantime.
+  let base = null;
+  let baseSha = null;
+
+  async function gitBlobSha(text) {
+    const body = new TextEncoder().encode(text);
+    const head = new TextEncoder().encode(`blob ${body.length}\0`);
+    const all = new Uint8Array(head.length + body.length);
+    all.set(head);
+    all.set(body, head.length);
+    const hash = await crypto.subtle.digest('SHA-1', all);
+    return [...new Uint8Array(hash)].map((b) => b.toString(16).padStart(2, '0')).join('');
+  }
+
+  // Three-way merge: whatever this page changed (local vs base) wins, and
+  // everything else takes the newer saved version. Arrays count as one value.
+  function merge3(old, local, remote) {
+    const same = (a, b) => JSON.stringify(a) === JSON.stringify(b);
+    if (same(local, old)) return remote;
+    if (same(remote, old)) return local;
+    const isObj = (v) => v && typeof v === 'object' && !Array.isArray(v);
+    if (!isObj(old) || !isObj(local) || !isObj(remote)) return local;
+    const out = {};
+    for (const k of new Set([...Object.keys(local), ...Object.keys(remote)])) {
+      const v = merge3(old[k], local[k], remote[k]);
+      if (v !== undefined) out[k] = v;
+    }
+    return out;
   }
 
   // Paths in the content are relative to the site root, one level above /admin/.
@@ -174,6 +206,13 @@
     const ref = await ghApi(`/git/ref/heads/${encodeURIComponent(gh.branch)}`);
     const head = await ghApi(`/git/commits/${ref.object.sha}`);
     const existing = await treeOf(head.tree.sha);
+    let merged = false;
+    const remoteSha = existing.get(CONTENT_PATH);
+    if (base && remoteSha && remoteSha !== baseSha) {
+      content = merge3(JSON.parse(base), content, await loadContent(head.sha));
+      normalize(content);
+      merged = true;
+    }
     const json = `${JSON.stringify(content, null, 2)}\n`;
     const used = (path) => json.includes(`"${path}"`);
     const entries = [{ path: CONTENT_PATH, mode: '100644', type: 'blob', content: json }];
@@ -190,6 +229,9 @@
     await ghApi(`/git/refs/heads/${encodeURIComponent(gh.branch)}`, { method: 'PATCH', body: { sha: commit.sha } });
     pending.clear();
     recovered = new Map();
+    base = JSON.stringify(content);
+    baseSha = await gitBlobSha(json);
+    return merged;
   }
 
   function toast(msg, type = '') {
@@ -356,7 +398,10 @@
   // ---------- app shell ----------
 
   async function loadApp() {
-    content = await loadContent(gh.branch);
+    const loaded = await fetchContent(gh.branch);
+    content = loaded.data;
+    base = JSON.stringify(loaded.data);
+    baseSha = loaded.sha;
     normalize(content);
     $('#auth').hidden = true;
     $('#app').hidden = false;
@@ -417,9 +462,15 @@
     $('#save').disabled = true;
     $('#save').textContent = 'جارٍ الحفظ…';
     try {
-      await commitContent('تحديث المحتوى من لوحة التحكم');
+      const merged = await commitContent('تحديث المحتوى من لوحة التحكم');
       setDirty(false);
-      toast('تم الحفظ. يظهر التحديث على الموقع خلال دقيقة تقريبًا.', 'ok');
+      if (merged) render();
+      toast(
+        merged
+          ? 'تم الحفظ، ودُمجت تعديلاتك مع تغييرات أحدث حُفظت من مكان آخر. يظهر التحديث خلال دقيقة تقريبًا.'
+          : 'تم الحفظ. يظهر التحديث على الموقع خلال دقيقة تقريبًا.',
+        'ok'
+      );
     } catch (err) {
       setDirty(true);
       toast(err.message, 'err');
@@ -679,6 +730,12 @@
     return wrap;
   }
 
+  // Keeps only the first link from whatever was pasted (pages often add text).
+  function firstUrl(text) {
+    const m = String(text).match(/https?:\/\/[^\s"'<>]+/);
+    return m ? m[0] : '';
+  }
+
   // Preview for a video item: its cover, the uploaded clip, or the link's platform.
   function videoThumb(item) {
     const link = parseVideoLink(item.link);
@@ -724,7 +781,8 @@
           const input = h('input', { type: 'url', class: 'ltr', placeholder: 'رابط الفيديو' });
           input.value = item.link || '';
           input.addEventListener('change', () => {
-            item.link = input.value.trim();
+            item.link = firstUrl(input.value);
+            input.value = item.link;
             touch();
             draw();
           });
@@ -749,7 +807,7 @@
       after: (draw) => {
         const input = h('input', { type: 'url', class: 'ltr', placeholder: 'https://www.instagram.com/reel/…' });
         const addLink = () => {
-          const url = input.value.trim();
+          const url = firstUrl(input.value);
           if (!parseVideoLink(url)) return toast('الصق رابطًا يبدأ بـ https://', 'err');
           list.push({ id: uid(), video: '', link: url, poster: '', caption: '' });
           touch();
