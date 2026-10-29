@@ -20,31 +20,10 @@
       "layout": "videos",
       "items": [
         {
-          "id": "d2bqqg",
-          "video": "assets/placeholders/video-1.mp4",
-          "link": "",
-          "poster": "",
-          "caption": ""
-        },
-        {
-          "id": "d319n5",
-          "video": "assets/placeholders/video-2.mp4",
-          "link": "",
-          "poster": "",
-          "caption": ""
-        },
-        {
           "id": "mvtlb65ylwfl5",
           "video": "",
           "link": "https://www.instagram.com/reel/DS-RNDAjFR2/",
           "poster": "uploads/mvtlikvm-3d597f.jpg",
-          "caption": ""
-        },
-        {
-          "id": "d4q911",
-          "video": "assets/placeholders/video-3.mp4",
-          "link": "",
-          "poster": "",
           "caption": ""
         },
         {
