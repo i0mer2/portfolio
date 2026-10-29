@@ -12,10 +12,21 @@
 </head>
 <body>
   <div class="auth" id="auth" hidden>
-    <form class="auth-card" id="authForm">
+    <form class="auth-card" id="loginForm" hidden>
       <div class="auth-logo" id="authLogo"></div>
       <h1>لوحة التحكم</h1>
-      <p class="muted">تُحفظ تعديلاتك مباشرة في مستودع الموقع على GitHub.</p>
+      <p class="muted">سجّل الدخول لإدارة موقعك.</p>
+      <label>اسم المستخدم<input type="text" id="loginUser" class="ltr" autocomplete="username" autocapitalize="none" spellcheck="false" required></label>
+      <label>كلمة المرور<input type="password" id="loginPass" autocomplete="current-password" required></label>
+      <button class="btn btn-primary" type="submit" id="loginBtn">تسجيل الدخول</button>
+      <p class="auth-error" id="loginError"></p>
+      <button class="auth-link link-btn" type="button" id="toSetup">الدخول برمز GitHub</button>
+    </form>
+
+    <form class="auth-card" id="authForm" hidden>
+      <div class="auth-logo" id="setupLogo"></div>
+      <h1>إعداد لوحة التحكم</h1>
+      <p class="muted" id="setupNote">هذه خطوة تُنفَّذ مرة واحدة فقط: اربط لوحة التحكم برمز GitHub، ثم أنشئ اسم مستخدم وكلمة مرور تدخل بهما بعد ذلك من أي جهاز.</p>
       <div class="auth-row">
         <label>اسم المستخدم في GitHub<input type="text" id="ghOwner" class="ltr" autocomplete="username" required></label>
         <label>اسم المستودع<input type="text" id="ghRepo" class="ltr" required></label>
@@ -28,6 +39,7 @@
       </details>
       <button class="btn btn-primary" type="submit" id="authBtn">ربط وتسجيل الدخول</button>
       <p class="auth-error" id="authError"></p>
+      <button class="auth-link link-btn" type="button" id="backToLogin">الرجوع إلى الدخول بكلمة المرور</button>
     </form>
   </div>
 

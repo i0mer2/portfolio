@@ -28,7 +28,7 @@
     { id: 'clients', icon: 'building', label: 'العملاء', hint: 'شعارات الجهات التي تعاملت معها' },
     { id: 'stats', icon: 'chart', label: 'الإنجازات', hint: 'الأرقام التي تظهر بعدّاد متحرك' },
     { id: 'settings', icon: 'settings', label: 'التواصل والمظهر', hint: 'روابط التواصل، ولون الموقع، والتذييل' },
-    { id: 'account', icon: 'lock', label: 'الحساب والنسخ السابقة', hint: 'الربط مع GitHub واستعادة النسخ السابقة' },
+    { id: 'account', icon: 'lock', label: 'الحساب والنسخ السابقة', hint: 'اسم المستخدم وكلمة المرور، واستعادة النسخ السابقة' },
   ];
   const STAT_ICONS = ['pen', 'play', 'video', 'award', 'briefcase', 'users', 'star', 'heart', 'trophy', 'clock', 'eye', 'rocket', 'coffee', 'globe'];
   const SECTION_TYPES = {
@@ -198,18 +198,119 @@
     setTimeout(() => t.remove(), type === 'err' ? 5000 : 3200);
   }
 
-  // ---------- connect ----------
+  // ---------- sign in ----------
+  // Day to day the owner signs in with a username and password. The GitHub
+  // token is stored encrypted in admin/login.json, and only that username and
+  // password can unlock it (PBKDF2 + AES-GCM, all in the browser). The token
+  // form is used once, to set things up.
 
-  function showAuth(error) {
+  const LOGIN_PATH = `${SITE_DIR}/admin/login.json`;
+  const KDF_ROUNDS = 600000;
+  const b64 = (bytes) => btoa(String.fromCharCode(...new Uint8Array(bytes)));
+  const unb64 = (text) => Uint8Array.from(atob(text), (c) => c.charCodeAt(0));
+  let sealed = null;
+
+  async function deriveKey(user, pass, salt, rounds) {
+    const secret = new TextEncoder().encode(`${user.trim().toLowerCase()}\n${pass}`);
+    const base = await crypto.subtle.importKey('raw', secret, 'PBKDF2', false, ['deriveKey']);
+    return crypto.subtle.deriveKey(
+      { name: 'PBKDF2', salt, iterations: rounds, hash: 'SHA-256' },
+      base,
+      { name: 'AES-GCM', length: 256 },
+      false,
+      ['encrypt', 'decrypt']
+    );
+  }
+
+  async function sealLogin(user, pass) {
+    const salt = crypto.getRandomValues(new Uint8Array(16));
+    const iv = crypto.getRandomValues(new Uint8Array(12));
+    const key = await deriveKey(user, pass, salt, KDF_ROUNDS);
+    const data = await crypto.subtle.encrypt({ name: 'AES-GCM', iv }, key, new TextEncoder().encode(JSON.stringify(gh)));
+    return { v: 1, rounds: KDF_ROUNDS, salt: b64(salt), iv: b64(iv), data: b64(data) };
+  }
+
+  async function openLogin(box, user, pass) {
+    const key = await deriveKey(user, pass, unb64(box.salt), box.rounds);
+    try {
+      const plain = await crypto.subtle.decrypt({ name: 'AES-GCM', iv: unb64(box.iv) }, key, unb64(box.data));
+      return JSON.parse(new TextDecoder().decode(plain));
+    } catch {
+      throw new Error('اسم المستخدم أو كلمة المرور غير صحيحة');
+    }
+  }
+
+  // The file sits next to this page. Right after it is first saved GitHub Pages
+  // may still be publishing it, so the repository copy is the fallback.
+  async function fetchSealed() {
+    const guess = guessRepo();
+    const owner = (gh && gh.owner) || guess.owner;
+    const repo = (gh && gh.repo) || guess.repo;
+    const urls = [`login.json?v=${Date.now()}`];
+    if (owner && repo) urls.push(`https://raw.githubusercontent.com/${owner}/${repo}/${(gh && gh.branch) || 'main'}/${LOGIN_PATH}?v=${Date.now()}`);
+    for (const url of urls) {
+      try {
+        const res = await fetch(url, { cache: 'no-store' });
+        if (res.ok) return await res.json();
+      } catch {}
+    }
+    return null;
+  }
+
+  // Writes one file to the repository (used for login.json).
+  async function putFile(path, text, message) {
+    let sha;
+    try {
+      sha = (await ghApi(`/contents/${path}?ref=${encodeURIComponent(gh.branch)}`)).sha;
+    } catch {}
+    const content = b64(new TextEncoder().encode(text));
+    await ghApi(`/contents/${path}`, { method: 'PUT', body: { message, content, branch: gh.branch, ...(sha ? { sha } : {}) } });
+  }
+
+  async function showAuth(error) {
     $('#app').hidden = true;
     $('#auth').hidden = false;
+    sealed = await fetchSealed();
+    showForm(sealed ? 'password' : 'token', error);
+  }
+
+  function showForm(mode, error) {
+    $('#loginForm').hidden = mode !== 'password';
+    $('#authForm').hidden = mode !== 'token';
+    $('#setupNote').hidden = !!sealed;
+    $('#backToLogin').hidden = !sealed;
     const guess = guessRepo();
     $('#ghOwner').value = (gh && gh.owner) || guess.owner || '';
     $('#ghRepo').value = (gh && gh.repo) || guess.repo || '';
     $('#ghBranch').value = (gh && gh.branch) || '';
-    $('#authError').textContent = error || '';
-    ($('#ghOwner').value ? $('#ghToken') : $('#ghOwner')).focus();
+    $('#loginError').textContent = mode === 'password' ? error || '' : '';
+    $('#authError').textContent = mode === 'token' ? error || '' : '';
+    (mode === 'password' ? $('#loginUser') : $('#ghOwner').value ? $('#ghToken') : $('#ghOwner')).focus();
   }
+
+  $('#toSetup').addEventListener('click', () => showForm('token'));
+  $('#backToLogin').addEventListener('click', () => showForm('password'));
+
+  $('#loginForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const btn = $('#loginBtn');
+    $('#loginError').textContent = '';
+    btn.disabled = true;
+    btn.textContent = 'جارٍ تسجيل الدخول…';
+    try {
+      sealed = sealed || (await fetchSealed());
+      if (!sealed) throw new Error('لم يُنشأ اسم مستخدم وكلمة مرور بعد');
+      gh = await openLogin(sealed, $('#loginUser').value, $('#loginPass').value);
+      await loadApp();
+      writeSettings(gh);
+      $('#loginPass').value = '';
+    } catch (err) {
+      $('#loginError').textContent = err.message;
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'تسجيل الدخول';
+    }
+  });
 
   $('#authForm').addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -233,6 +334,10 @@
       await loadApp();
       writeSettings(gh);
       $('#ghToken').value = '';
+      if (!sealed) {
+        switchTab('account');
+        toast('أنشئ اسم مستخدم وكلمة مرور لتدخل بهما من أي جهاز.', 'ok');
+      }
     } catch (err) {
       $('#authError').textContent = err.message;
     } finally {
@@ -247,38 +352,6 @@
     setDirty(false);
     showAuth();
   });
-
-  // A link that carries the connection to another device. It travels in the
-  // URL fragment, which browsers never send to a server, and is wiped from the
-  // address bar as soon as the dashboard opens.
-  function connectLink() {
-    const data = btoa(JSON.stringify({ o: gh.owner, r: gh.repo, b: gh.branch, t: gh.token }));
-    return `${location.origin}${location.pathname}#connect=${encodeURIComponent(data)}`;
-  }
-
-  function readConnectLink() {
-    const m = location.hash.match(/^#connect=(.+)$/);
-    if (!m) return;
-    history.replaceState(null, '', location.pathname + location.search);
-    try {
-      const d = JSON.parse(atob(decodeURIComponent(m[1])));
-      gh = { owner: d.o, repo: d.r, branch: d.b, token: d.t };
-      writeSettings(gh);
-    } catch {}
-  }
-
-  function loadQrLib() {
-    if (window.qrcode) return Promise.resolve();
-    return new Promise((resolve, reject) => {
-      const s = document.createElement('script');
-      s.src = 'https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js';
-      s.integrity = 'sha384-mZT2gIty7ZDdOGkxfP6joZcYdMW1Jvj9dRlfpTmaJAKKXTqzygtB22k7FLe+KZC1';
-      s.crossOrigin = 'anonymous';
-      s.onload = resolve;
-      s.onerror = () => reject(new Error('تعذّر تحميل أداة رمز QR، تأكد من اتصالك بالإنترنت'));
-      document.head.append(s);
-    });
-  }
 
   // ---------- app shell ----------
 
@@ -1105,50 +1178,54 @@
         })
         .catch((err) => list.replaceChildren(h('div', { class: 'empty', text: err.message })));
 
-      const qrBox = h('div', { class: 'qr-box' });
-      let qrTimer = null;
-      const hideQr = () => {
-        clearTimeout(qrTimer);
-        qrBox.replaceChildren();
-        qrBtn.hidden = false;
-      };
-      const qrBtn = h(
+      const userIn = h('input', { type: 'text', class: 'ltr', autocomplete: 'username' });
+      const passIn = h('input', { type: 'password', autocomplete: 'new-password' });
+      const pass2In = h('input', { type: 'password', autocomplete: 'new-password' });
+      const status = h('span', { class: 'hint muted' });
+      const drawStatus = () =>
+        (status.textContent = sealed
+          ? 'بيانات الدخول مُنشأة. يمكنك تغييرها من هنا في أي وقت.'
+          : 'لم تُنشأ بيانات دخول بعد. أنشئها الآن لتدخل لوحة التحكم من أي جهاز باسم المستخدم وكلمة المرور فقط.');
+      drawStatus();
+      if (!sealed) fetchSealed().then((s) => ((sealed = s), drawStatus()));
+      const saveLogin = h(
         'button',
         {
           type: 'button',
-          class: 'btn',
+          class: 'btn btn-primary',
           onclick: async () => {
+            const user = userIn.value.trim();
+            if (user.length < 3) return toast('يجب ألا يقل اسم المستخدم عن ثلاثة أحرف', 'err');
+            if (passIn.value.length < 8) return toast('يجب ألا تقل كلمة المرور عن ثمانية أحرف', 'err');
+            if (passIn.value !== pass2In.value) return toast('كلمتا المرور غير متطابقتين', 'err');
+            saveLogin.disabled = true;
             try {
-              await loadQrLib();
-              const qr = window.qrcode(0, 'M');
-              qr.addData(connectLink());
-              qr.make();
-              qrBox.innerHTML = qr.createSvgTag({ cellSize: 5, margin: 3, scalable: true });
-              qrBox.append(h('button', { type: 'button', class: 'btn btn-sm', text: 'إخفاء الرمز', onclick: hideQr }));
-              qrBtn.hidden = true;
-              // The code grants edit access, so it does not stay on screen.
-              qrTimer = setTimeout(hideQr, 2 * 60 * 1000);
+              const box = await sealLogin(user, passIn.value);
+              await putFile(LOGIN_PATH, `${JSON.stringify(box, null, 2)}\n`, sealed ? 'تغيير بيانات الدخول' : 'إنشاء بيانات الدخول');
+              sealed = box;
+              passIn.value = pass2In.value = '';
+              drawStatus();
+              toast('تم الحفظ. يمكنك الآن الدخول من أي جهاز باسم المستخدم وكلمة المرور.', 'ok');
             } catch (err) {
               toast(err.message, 'err');
+            } finally {
+              saveLogin.disabled = false;
             }
           },
         },
-        ico('link'),
-        'إظهار رمز QR'
+        'حفظ بيانات الدخول'
       );
 
       return [
-        panel('الربط مع GitHub', [repoLink], info, h('span', { class: 'hint muted', text: 'يُحفظ رمز الدخول في هذا المتصفح فقط. عند تسجيل الخروج يُحذف من الجهاز.' })),
         panel(
-          'فتح لوحة التحكم على جهاز آخر',
+          'اسم المستخدم وكلمة المرور',
           null,
-          h('span', {
-            class: 'hint muted',
-            text: 'اضغط «إظهار رمز QR»، ثم وجّه كاميرا الموبايل إلى الرمز واضغط الرابط الذي يظهر، فتُفتح لوحة التحكم على الموبايل وأنت مسجّل الدخول. لا تعرض الرمز لأي شخص، لأنه يمنح صلاحية تعديل موقعك، ويختفي تلقائيًا بعد دقيقتين.',
-          }),
-          h('div', {}, qrBtn),
-          qrBox
+          status,
+          h('div', { class: 'grid-3' }, field('اسم المستخدم', userIn), field('كلمة المرور', passIn, 'ثمانية أحرف على الأقل'), field('تأكيد كلمة المرور', pass2In)),
+          h('span', { class: 'hint muted', text: 'اختر كلمة مرور قوية لا تستخدمها في أي مكان آخر، لأنها تحمي صلاحية تعديل موقعك.' }),
+          h('div', {}, saveLogin)
         ),
+        panel('الربط مع GitHub', [repoLink], info),
         panel(
           'النسخ السابقة',
           null,
@@ -1162,9 +1239,9 @@
   // ---------- boot ----------
 
   $('#authLogo').innerHTML = icon('pen');
+  $('#setupLogo').innerHTML = icon('pen');
   $('#sideLogo').innerHTML = icon('pen');
 
-  readConnectLink();
   if (gh && gh.token) loadApp().catch((err) => showAuth(err.message));
   else showAuth();
 })();
