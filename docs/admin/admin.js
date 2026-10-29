@@ -215,13 +215,18 @@
     e.preventDefault();
     $('#authError').textContent = '';
     $('#authBtn').disabled = true;
+    // Pasting on an Arabic page can bring along direction marks or other text.
+    const clean = (id, allowed) => $(id).value.replace(allowed, '');
     gh = {
-      owner: $('#ghOwner').value.trim(),
-      repo: $('#ghRepo').value.trim(),
-      branch: $('#ghBranch').value.trim(),
-      token: $('#ghToken').value.trim(),
+      owner: clean('#ghOwner', /[^\w.-]/g),
+      repo: clean('#ghRepo', /[^\w.-]/g),
+      branch: clean('#ghBranch', /[^\w./-]/g),
+      token: clean('#ghToken', /[^\w]/g),
     };
     try {
+      if (!/^(github_pat_|ghp_)\w{20,}$/.test(gh.token)) {
+        throw new Error('ما لُصق ليس رمز دخول. الرمز نص طويل يبدأ بـ github_pat_، انسخه من صفحة GitHub ثم الصقه هنا.');
+      }
       const repo = await ghApi('');
       if (!repo.permissions || !repo.permissions.push) throw new Error(ghError(403));
       gh.branch = gh.branch || repo.default_branch;
