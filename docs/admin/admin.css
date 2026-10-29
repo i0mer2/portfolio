@@ -182,3 +182,7 @@ textarea { resize: vertical; min-height: 120px; line-height: 1.9; }
 .readout { padding: 11px 14px; border-radius: 12px; background: #110c22; border: 1px solid var(--line); }
 .side-brand small { display: block; max-width: 160px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 @media (max-width: 520px) { .auth-row { grid-template-columns: 1fr; } }
+
+.qr-box { display: flex; flex-direction: column; align-items: flex-start; gap: 10px; }
+.qr-box:empty { display: none; }
+.qr-box svg { width: 240px; height: 240px; padding: 8px; border-radius: 14px; background: #fff; }

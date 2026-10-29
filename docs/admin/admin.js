@@ -248,6 +248,38 @@
     showAuth();
   });
 
+  // A link that carries the connection to another device. It travels in the
+  // URL fragment, which browsers never send to a server, and is wiped from the
+  // address bar as soon as the dashboard opens.
+  function connectLink() {
+    const data = btoa(JSON.stringify({ o: gh.owner, r: gh.repo, b: gh.branch, t: gh.token }));
+    return `${location.origin}${location.pathname}#connect=${encodeURIComponent(data)}`;
+  }
+
+  function readConnectLink() {
+    const m = location.hash.match(/^#connect=(.+)$/);
+    if (!m) return;
+    history.replaceState(null, '', location.pathname + location.search);
+    try {
+      const d = JSON.parse(atob(decodeURIComponent(m[1])));
+      gh = { owner: d.o, repo: d.r, branch: d.b, token: d.t };
+      writeSettings(gh);
+    } catch {}
+  }
+
+  function loadQrLib() {
+    if (window.qrcode) return Promise.resolve();
+    return new Promise((resolve, reject) => {
+      const s = document.createElement('script');
+      s.src = 'https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js';
+      s.integrity = 'sha384-mZT2gIty7ZDdOGkxfP6joZcYdMW1Jvj9dRlfpTmaJAKKXTqzygtB22k7FLe+KZC1';
+      s.crossOrigin = 'anonymous';
+      s.onload = resolve;
+      s.onerror = () => reject(new Error('تعذّر تحميل أداة رمز QR، تأكد من اتصالك بالإنترنت'));
+      document.head.append(s);
+    });
+  }
+
   // ---------- app shell ----------
 
   async function loadApp() {
@@ -1073,8 +1105,50 @@
         })
         .catch((err) => list.replaceChildren(h('div', { class: 'empty', text: err.message })));
 
+      const qrBox = h('div', { class: 'qr-box' });
+      let qrTimer = null;
+      const hideQr = () => {
+        clearTimeout(qrTimer);
+        qrBox.replaceChildren();
+        qrBtn.hidden = false;
+      };
+      const qrBtn = h(
+        'button',
+        {
+          type: 'button',
+          class: 'btn',
+          onclick: async () => {
+            try {
+              await loadQrLib();
+              const qr = window.qrcode(0, 'M');
+              qr.addData(connectLink());
+              qr.make();
+              qrBox.innerHTML = qr.createSvgTag({ cellSize: 5, margin: 3, scalable: true });
+              qrBox.append(h('button', { type: 'button', class: 'btn btn-sm', text: 'إخفاء الرمز', onclick: hideQr }));
+              qrBtn.hidden = true;
+              // The code grants edit access, so it does not stay on screen.
+              qrTimer = setTimeout(hideQr, 2 * 60 * 1000);
+            } catch (err) {
+              toast(err.message, 'err');
+            }
+          },
+        },
+        ico('link'),
+        'إظهار رمز QR'
+      );
+
       return [
         panel('الربط مع GitHub', [repoLink], info, h('span', { class: 'hint muted', text: 'يُحفظ رمز الدخول في هذا المتصفح فقط. عند تسجيل الخروج يُحذف من الجهاز.' })),
+        panel(
+          'فتح لوحة التحكم على جهاز آخر',
+          null,
+          h('span', {
+            class: 'hint muted',
+            text: 'اضغط «إظهار رمز QR»، ثم وجّه كاميرا الموبايل إلى الرمز واضغط الرابط الذي يظهر، فتُفتح لوحة التحكم على الموبايل وأنت مسجّل الدخول. لا تعرض الرمز لأي شخص، لأنه يمنح صلاحية تعديل موقعك، ويختفي تلقائيًا بعد دقيقتين.',
+          }),
+          h('div', {}, qrBtn),
+          qrBox
+        ),
         panel(
           'النسخ السابقة',
           null,
@@ -1090,6 +1164,7 @@
   $('#authLogo').innerHTML = icon('pen');
   $('#sideLogo').innerHTML = icon('pen');
 
+  readConnectLink();
   if (gh && gh.token) loadApp().catch((err) => showAuth(err.message));
   else showAuth();
 })();
