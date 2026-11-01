@@ -102,18 +102,37 @@
     $('.sec-head h2', sec).textContent = data.title || '';
     $('.sec-head p', sec).textContent = data.subtitle || '';
     const grid = $('.clients-grid', sec);
-    data.items.forEach((item, i) => {
-      const tile = el('div', 'client');
-      tile.dataset.reveal = '';
-      tile.style.setProperty('--d', `${(i % 6) * 0.07}s`);
-      tile.title = item.name || '';
+    grid.className = 'clients-marquee';
+    grid.dataset.reveal = '';
+    const tile = (item) => {
+      const node = el('div', 'client');
+      node.title = item.name || '';
       const img = el('img');
       img.src = item.logo;
       img.alt = item.name || '';
-      img.loading = 'lazy';
-      tile.append(img);
-      grid.append(tile);
-    });
+      img.draggable = false;
+      node.append(img);
+      return node;
+    };
+
+    // Rows of logos that slide sideways without end, each row the other way.
+    const items = data.items;
+    const rows = items.length >= 9 ? 3 : items.length >= 4 ? 2 : 1;
+    const per = Math.ceil(items.length / rows);
+    for (let r = 0; r < rows; r++) {
+      const rowItems = items.slice(r * per, (r + 1) * per);
+      if (!rowItems.length) continue;
+      // Repeat the row until one copy is wider than a wide screen, then add a
+      // second identical copy so sliding by half loops seamlessly.
+      const copies = Math.max(1, Math.ceil(10 / rowItems.length));
+      const set = Array.from({ length: copies }, () => rowItems).flat();
+      const row = el('div', `marquee${r % 2 ? ' reverse' : ''}`);
+      const track = el('div', 'marquee-track');
+      track.style.setProperty('--dur', `${set.length * 3.2}s`);
+      for (const item of [...set, ...set]) track.append(tile(item));
+      row.append(track);
+      grid.append(row);
+    }
   }
 
   function renderStats(c) {
