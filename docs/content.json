@@ -87,7 +87,7 @@
     {
       "id": "facemvxpwb0l",
       "title": "مقاطعي كوجه إعلاني",
-      "subtitle": "إعلانات قدّمتها أمام الكاميرا",
+      "subtitle": "",
       "layout": "videos",
       "items": [
         {
@@ -213,38 +213,73 @@
     },
     {
       "id": "daebji",
-      "title": "الحملات",
-      "subtitle": "تصاميم من كتابة محتواها",
+      "title": "تصاميم من افكاري و كتابتي ",
+      "subtitle": "",
       "layout": "slider",
       "items": [
         {
-          "id": "dbrnfx",
-          "image": "assets/placeholders/post-1.svg",
+          "id": "mvxr1vj43twuz",
+          "image": "uploads/mvxr1vj3-ln32wf.jpg",
           "caption": ""
         },
         {
-          "id": "dctl40",
-          "image": "assets/placeholders/post-2.svg",
+          "id": "mvxr0cbqligqn",
+          "image": "uploads/mvxr0cbq-4f0ua6.jpg",
           "caption": ""
         },
         {
-          "id": "dd1fvx",
-          "image": "assets/placeholders/post-3.svg",
+          "id": "mvxr18tqorjv0",
+          "image": "uploads/mvxr18tp-xccoy2.jpg",
           "caption": ""
         },
         {
-          "id": "deop4s",
-          "image": "assets/placeholders/post-4.svg",
+          "id": "mvxqxivk9k9lv",
+          "image": "uploads/mvxqxivj-zau002.jpg",
           "caption": ""
         },
         {
-          "id": "dfn1la",
-          "image": "assets/placeholders/post-5.svg",
+          "id": "mvxqzy3i2knp4",
+          "image": "uploads/mvxqzy3h-6wnh0d.jpg",
           "caption": ""
         },
         {
-          "id": "dgn6yy",
-          "image": "assets/placeholders/post-6.svg",
+          "id": "mvxqyg1hrk3se",
+          "image": "uploads/mvxqyg1g-cfpaep.jpg",
+          "caption": ""
+        },
+        {
+          "id": "mvxqznfxfint4",
+          "image": "uploads/mvxqznfx-z948wx.jpg",
+          "caption": ""
+        },
+        {
+          "id": "mvxqycnffcbyd",
+          "image": "uploads/mvxqycnf-vd5rdo.jpg",
+          "caption": ""
+        },
+        {
+          "id": "mvxqz4etmaio1",
+          "image": "uploads/mvxqz4et-i6cbud.jpg",
+          "caption": ""
+        },
+        {
+          "id": "mvxqzr0ujkcm1",
+          "image": "uploads/mvxqzr0t-j0jq6h.jpg",
+          "caption": ""
+        },
+        {
+          "id": "mvxr0n1oo6apn",
+          "image": "uploads/mvxr0n1o-c2cyjg.jpg",
+          "caption": ""
+        },
+        {
+          "id": "mvxr0y826vopn",
+          "image": "uploads/mvxr0y81-fvtpx2.jpg",
+          "caption": ""
+        },
+        {
+          "id": "mvxr2toqvg8r9",
+          "image": "uploads/mvxr2top-1mokjs.jpg",
           "caption": ""
         }
       ]
