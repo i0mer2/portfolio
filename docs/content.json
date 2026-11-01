@@ -15,8 +15,8 @@
   "galleries": [
     {
       "id": "d1dan2",
-      "title": "أعمالي",
-      "subtitle": "فيديوهات من كتابتي",
+      "title": "فيديوهات من كتابتي",
+      "subtitle": "",
       "layout": "videos",
       "items": [
         {
