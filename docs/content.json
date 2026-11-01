@@ -362,77 +362,82 @@
     "text": "عمر أورهان القياجي، من مدينة كركوك في العراق، طالب هندسة حاسبات وشغوف بصناعة المحتوى والإبداع الإعلاني. أعمل على كتابة النصوص الإعلانية، وتطوير الأفكار وتحويلها إلى مقاطع مرئية تجمع بين الفكرة الإبداعية والهدف التسويقي.\n\nاكتسبت خبرتي من خلال العمل مع جهات متخصصة في التسويق وصناعة المحتوى، من بينها شركة نسق للتسويق واستوديوهات أوديتي لصناعة المحتوى، حيث أسهم في تطوير الأفكار، وصياغة الرسائل الإعلانية، وإنتاج محتوى يعبّر عن هوية العلامة التجارية ويخاطب الجمهور بالأسلوب المناسب."
   },
   "clients": {
-    "title": "عملائي",
-    "subtitle": "جهات وثقت بعملي",
+    "title": "شركات و عملاء ",
+    "subtitle": "وثقت بكتاباتي وافكاري",
     "items": [
       {
         "id": "dhz78l",
-        "name": "عميل 1",
+        "name": "ISTIKBAL",
         "logo": "uploads/mvtoi4e6-xes1st.jpg"
       },
       {
+        "id": "mvtoj4uc222fs",
+        "name": "ZAYTUNA APP",
+        "logo": "uploads/mvtoj4ub-9fnwso.jpg"
+      },
+      {
+        "id": "dpzf6y",
+        "name": "SMOKYS ",
+        "logo": "uploads/mvtoiz4e-al8gqa.jpg"
+      },
+      {
         "id": "di9i0r",
-        "name": "عميل 2",
+        "name": "MONDI HOME",
         "logo": "uploads/mvtoi9po-dkedlk.jpg"
       },
       {
-        "id": "djgnaq",
-        "name": "عميل 3",
-        "logo": "uploads/mvtoicq0-mn5rw6.jpg"
+        "id": "mvxtjen1n52qr",
+        "name": "RIONA CLINIC",
+        "logo": "uploads/mvxtjen0-4qh7in.jpg"
       },
       {
         "id": "dk3352",
-        "name": "عميل 4",
+        "name": "KID STORY",
         "logo": "uploads/mvtoiff2-0xo16q.jpg"
       },
       {
+        "id": "doqj0u",
+        "name": "TREND CLINIC",
+        "logo": "uploads/mvtoisl4-8xnwac.jpg"
+      },
+      {
+        "id": "dnbrg3",
+        "name": "VMAXO",
+        "logo": "uploads/mvtoipxy-e3mva7.jpg"
+      },
+      {
         "id": "dlfbbi",
-        "name": "عميل 5",
+        "name": "ALMANDOB APP",
         "logo": "uploads/mvtoij90-nbgpos.jpg"
       },
       {
         "id": "dmbpi0",
-        "name": "عميل 6",
+        "name": "FUTURE HOUSE ",
         "logo": "uploads/mvtoimjp-pdt1g6.jpg"
       },
       {
-        "id": "dnbrg3",
-        "name": "عميل 7",
-        "logo": "uploads/mvtoipxy-e3mva7.jpg"
-      },
-      {
-        "id": "doqj0u",
-        "name": "عميل 8",
-        "logo": "uploads/mvtoisl4-8xnwac.jpg"
-      },
-      {
-        "id": "dpzf6y",
-        "name": "عميل 9",
-        "logo": "uploads/mvtoiz4e-al8gqa.jpg"
+        "id": "djgnaq",
+        "name": "BELLONA MOBILIA",
+        "logo": "uploads/mvtoicq0-mn5rw6.jpg"
       },
       {
         "id": "dqsb4g",
-        "name": "عميل 10",
+        "name": "MY SHOWER",
         "logo": "uploads/mvtoivjf-29v4gh.jpg"
       },
       {
-        "id": "mvtoj4uc222fs",
-        "name": "",
-        "logo": "uploads/mvtoj4ub-9fnwso.jpg"
-      },
-      {
         "id": "mvtoj7d24m8gw",
-        "name": "",
+        "name": "NASAQ CO",
         "logo": "uploads/mvtoj7d1-ak8r5z.jpg"
       },
       {
         "id": "mvtoj9b4eq8lx",
-        "name": "",
+        "name": "VALUX MOBILIA",
         "logo": "uploads/mvtoj9b3-1iq1ho.jpg"
       },
       {
         "id": "mvtojb12bcav3",
-        "name": "",
+        "name": "LAVISTA RESTURANT",
         "logo": "uploads/mvtojb11-v6m1ff.jpg"
       }
     ]
