@@ -15,8 +15,8 @@
   "galleries": [
     {
       "id": "d1dan2",
-      "title": "فيديوهات من كتابتي",
-      "subtitle": "",
+      "title": "محتويات و اعلانات ",
+      "subtitle": "من كتابتي و اخراجي",
       "layout": "videos",
       "items": [
         {
@@ -149,8 +149,8 @@
     },
     {
       "id": "facemvxpwb0l",
-      "title": "مقاطعي كوجه إعلاني",
-      "subtitle": "",
+      "title": "محتويات و اعلانات ",
+      "subtitle": "كوجه اعلاني ",
       "layout": "videos",
       "items": [
         {
@@ -283,8 +283,8 @@
     },
     {
       "id": "daebji",
-      "title": "تصاميم من افكاري و كتابتي ",
-      "subtitle": "",
+      "title": "حملات و تصاميم ",
+      "subtitle": " من افكاري و كتابتي ",
       "layout": "slider",
       "items": [
         {
