@@ -469,21 +469,21 @@
         "id": "dry7cf",
         "icon": "pen",
         "prefix": "+",
-        "value": 200,
+        "value": 235,
         "label": "نص إعلاني"
       },
       {
         "id": "dscbe4",
         "icon": "play",
         "prefix": "+",
-        "value": 150,
+        "value": 185,
         "label": "فيديو"
       },
       {
         "id": "dtl5ok",
         "icon": "users",
         "prefix": "+",
-        "value": 25,
+        "value": 40,
         "label": "عميل"
       },
       {
