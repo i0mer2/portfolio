@@ -172,11 +172,32 @@
   }
 
   // Three-way merge: whatever this page changed (local vs base) wins, and
-  // everything else takes the newer saved version. Arrays count as one value.
+  // everything else takes the newer saved version. Lists of items with ids
+  // (sections, videos, logos…) merge item by item; other lists count as one value.
   function merge3(old, local, remote) {
     const same = (a, b) => JSON.stringify(a) === JSON.stringify(b);
     if (same(local, old)) return remote;
     if (same(remote, old)) return local;
+    const withIds = (a) => Array.isArray(a) && a.every((x) => x && typeof x === 'object' && x.id);
+    if (withIds(old) && withIds(local) && withIds(remote)) {
+      const byId = (a) => new Map(a.map((x) => [x.id, x]));
+      const O = byId(old);
+      const L = byId(local);
+      const R = byId(remote);
+      const out = [];
+      for (const x of local) {
+        // Removed elsewhere and not touched here: stays removed.
+        if (!R.has(x.id) && O.has(x.id) && same(x, O.get(x.id))) continue;
+        out.push(R.has(x.id) && O.has(x.id) ? merge3(O.get(x.id), x, R.get(x.id)) : x);
+      }
+      // Added elsewhere: keep it, right after the item it followed there.
+      remote.forEach((x, i) => {
+        if (L.has(x.id) || O.has(x.id)) return;
+        const prev = i > 0 ? out.findIndex((y) => y.id === remote[i - 1].id) : -1;
+        out.splice(prev + 1, 0, x);
+      });
+      return out;
+    }
     const isObj = (v) => v && typeof v === 'object' && !Array.isArray(v);
     if (!isObj(old) || !isObj(local) || !isObj(remote)) return local;
     const out = {};
@@ -425,7 +446,7 @@
   // save over newer work. Before saving, compare with the published version;
   // if this page is outdated, carry the unsaved edits over and reload.
 
-  const APP_VERSION = '2026-10-29.5';
+  const APP_VERSION = '2026-11-01.1';
   const DRAFT_KEY = 'portfolio-draft';
 
   async function isOutdated() {
@@ -1048,7 +1069,7 @@
           ];
         }
         return panel(
-          `${SECTION_TYPES[type].label} — ${g.subtitle || g.title || `القسم ${gi + 1}`}`,
+          `${g.title || `القسم ${gi + 1}`} (${SECTION_TYPES[type].label})`,
           actions,
           h('div', { class: 'grid-2' }, text('العنوان', g, 'title'), text('العنوان الفرعي', g, 'subtitle')),
           body
